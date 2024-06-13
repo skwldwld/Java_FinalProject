@@ -1,165 +1,232 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.Scanner;
 
 public class MenuController {
     private MenuService menuService = new MenuService();
-    private Scanner scanner = new Scanner(System.in);
 
     public void start() {
-        while (true) {
-            System.out.println("1. Add Menu");
-            System.out.println("2. View Menu");
-            System.out.println("3. View All Menus");
-            System.out.println("4. Update Menu");
-            System.out.println("5. Delete Menu");
-            System.out.println("6. Add User Preference");
-            System.out.println("7. Recommend Menus");
-            System.out.println("0. Exit");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+        JFrame frame = new JFrame("Food Menu Recommendation");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
 
-            switch (choice) {
-                case 1:
-                    addMenu();
-                    break;
-                case 2:
-                    viewMenu();
-                    break;
-                case 3:
-                    viewAllMenus();
-                    break;
-                case 4:
-                    updateMenu();
-                    break;
-                case 5:
-                    deleteMenu();
-                    break;
-                case 6:
-                    addUserPreference();
-                    break;
-                case 7:
-                    recommendMenus();
-                    break;
-                case 0:
-                    System.exit(0);
-                default:
-                    System.out.println("Invalid choice");
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(0, 1));
+
+        JButton addMenuButton = new JButton("Add Menu");
+        JButton viewMenuButton = new JButton("View Menu");
+        JButton viewAllMenusButton = new JButton("View All Menus");
+        JButton updateMenuButton = new JButton("Update Menu");
+        JButton deleteMenuButton = new JButton("Delete Menu");
+        JButton addUserPreferenceButton = new JButton("Add User Preference");
+        JButton recommendMenusButton = new JButton("Recommend Menus");
+
+        panel.add(addMenuButton);
+        panel.add(viewMenuButton);
+        panel.add(viewAllMenusButton);
+        panel.add(updateMenuButton);
+        panel.add(deleteMenuButton);
+        panel.add(addUserPreferenceButton);
+        panel.add(recommendMenusButton);
+
+        frame.getContentPane().add(BorderLayout.CENTER, panel);
+
+        addMenuButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addMenu();
             }
-        }
+        });
+
+        viewMenuButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                viewMenu();
+            }
+        });
+
+        viewAllMenusButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                viewAllMenus();
+            }
+        });
+
+        updateMenuButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateMenu();
+            }
+        });
+
+        deleteMenuButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteMenu();
+            }
+        });
+
+        addUserPreferenceButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addUserPreference();
+            }
+        });
+
+        recommendMenusButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                recommendMenus();
+            }
+        });
+
+        frame.setVisible(true);
     }
 
     private void addMenu() {
-        System.out.println("Enter name:");
-        String name = scanner.nextLine();
-        System.out.println("Enter description:");
-        String description = scanner.nextLine();
-        System.out.println("Enter category:");
-        String category = scanner.nextLine();
-        System.out.println("Enter price:");
-        double price = scanner.nextDouble();
-        System.out.println("Enter rating:");
-        double rating = scanner.nextDouble();
-        scanner.nextLine();
+        JTextField nameField = new JTextField();
+        JTextField descriptionField = new JTextField();
+        JTextField categoryField = new JTextField();
+        JTextField priceField = new JTextField();
+        JTextField ratingField = new JTextField();
 
-        Menu menu = new Menu(0, name, description, category, price, rating);
-        menuService.addMenu(menu);
-        System.out.println("Menu added successfully.");
+        Object[] message = {
+                "Name:", nameField,
+                "Description:", descriptionField,
+                "Category:", categoryField,
+                "Price:", priceField,
+                "Rating:", ratingField
+        };
+
+        int option = JOptionPane.showConfirmDialog(null, message, "Add Menu", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            String name = nameField.getText();
+            String description = descriptionField.getText();
+            String category = categoryField.getText();
+            double price = Double.parseDouble(priceField.getText());
+            double rating = Double.parseDouble(ratingField.getText());
+
+            Menu menu = new Menu(0, name, description, category, price, rating);
+            menuService.addMenu(menu);
+            JOptionPane.showMessageDialog(null, "Menu added successfully.");
+        }
     }
 
     private void viewMenu() {
-        System.out.println("Enter menu ID:");
-        int id = scanner.nextInt();
-        scanner.nextLine();
+        String idString = JOptionPane.showInputDialog("Enter menu ID:");
+        int id = Integer.parseInt(idString);
 
         Menu menu = menuService.getMenu(id);
         if (menu != null) {
-            System.out.println("ID: " + menu.getId());
-            System.out.println("Name: " + menu.getName());
-            System.out.println("Description: " + menu.getDescription());
-            System.out.println("Category: " + menu.getCategory());
-            System.out.println("Price: " + menu.getPrice());
-            System.out.println("Rating: " + menu.getRating());
+            JOptionPane.showMessageDialog(null, "ID: " + menu.getId()
+                    + "\nName: " + menu.getName()
+                    + "\nDescription: " + menu.getDescription()
+                    + "\nCategory: " + menu.getCategory()
+                    + "\nPrice: " + menu.getPrice()
+                    + "\nRating: " + menu.getRating());
         } else {
-            System.out.println("Menu not found.");
+            JOptionPane.showMessageDialog(null, "Menu not found.");
         }
     }
 
     private void viewAllMenus() {
         List<Menu> menus = menuService.getAllMenus();
+        StringBuilder message = new StringBuilder();
         for (Menu menu : menus) {
-            System.out.println("ID: " + menu.getId());
-            System.out.println("Name: " + menu.getName());
-            System.out.println("Description: " + menu.getDescription());
-            System.out.println("Category: " + menu.getCategory());
-            System.out.println("Price: " + menu.getPrice());
-            System.out.println("Rating: " + menu.getRating());
-            System.out.println("------------");
+            message.append("ID: ").append(menu.getId())
+                    .append("\nName: ").append(menu.getName())
+                    .append("\nDescription: ").append(menu.getDescription())
+                    .append("\nCategory: ").append(menu.getCategory())
+                    .append("\nPrice: ").append(menu.getPrice())
+                    .append("\nRating: ").append(menu.getRating())
+                    .append("\n------------\n");
         }
+        JOptionPane.showMessageDialog(null, message.toString());
     }
 
     private void updateMenu() {
-        System.out.println("Enter menu ID:");
-        int id = scanner.nextInt();
-        scanner.nextLine();
+        JTextField idField = new JTextField();
+        JTextField nameField = new JTextField();
+        JTextField descriptionField = new JTextField();
+        JTextField categoryField = new JTextField();
+        JTextField priceField = new JTextField();
+        JTextField ratingField = new JTextField();
 
-        System.out.println("Enter name:");
-        String name = scanner.nextLine();
-        System.out.println("Enter description:");
-        String description = scanner.nextLine();
-        System.out.println("Enter category:");
-        String category = scanner.nextLine();
-        System.out.println("Enter price:");
-        double price = scanner.nextDouble();
-        System.out.println("Enter rating:");
-        double rating = scanner.nextDouble();
-        scanner.nextLine();
+        Object[] message = {
+                "ID:", idField,
+                "Name:", nameField,
+                "Description:", descriptionField,
+                "Category:", categoryField,
+                "Price:", priceField,
+                "Rating:", ratingField
+        };
 
-        Menu menu = new Menu(id, name, description, category, price, rating);
-        menuService.updateMenu(menu);
-        System.out.println("Menu updated successfully.");
+        int option = JOptionPane.showConfirmDialog(null, message, "Update Menu", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            int id = Integer.parseInt(idField.getText());
+            String name = nameField.getText();
+            String description = descriptionField.getText();
+            String category = categoryField.getText();
+            double price = Double.parseDouble(priceField.getText());
+            double rating = Double.parseDouble(ratingField.getText());
+
+            Menu menu = new Menu(id, name, description, category, price, rating);
+            menuService.updateMenu(menu);
+            JOptionPane.showMessageDialog(null, "Menu updated successfully.");
+        }
     }
 
     private void deleteMenu() {
-        System.out.println("Enter menu ID:");
-        int id = scanner.nextInt();
-        scanner.nextLine();
+        String idString = JOptionPane.showInputDialog("Enter menu ID:");
+        int id = Integer.parseInt(idString);
 
         menuService.deleteMenu(id);
-        System.out.println("Menu deleted successfully.");
+        JOptionPane.showMessageDialog(null, "Menu deleted successfully.");
     }
 
     private void addUserPreference() {
-        System.out.println("Enter user ID:");
-        int userId = scanner.nextInt();
-        scanner.nextLine();
+        JTextField userIdField = new JTextField();
+        JTextField preferredCategoryField = new JTextField();
+        JTextField preferredPriceField = new JTextField();
+        JTextField preferredRatingField = new JTextField();
 
-        System.out.println("Enter preferred category:");
-        String preferredCategory = scanner.nextLine();
-        System.out.println("Enter preferred price:");
-        double preferredPrice = scanner.nextDouble();
-        System.out.println("Enter preferred rating:");
-        double preferredRating = scanner.nextDouble();
-        scanner.nextLine();
+        Object[] message = {
+                "User ID:", userIdField,
+                "Preferred Category:", preferredCategoryField,
+                "Preferred Price:", preferredPriceField,
+                "Preferred Rating:", preferredRatingField
+        };
 
-        UserPreference preference = new UserPreference(userId, preferredCategory, preferredPrice, preferredRating);
-        menuService.addUserPreference(preference);
-        System.out.println("User preference added successfully.");
+        int option = JOptionPane.showConfirmDialog(null, message, "Add User Preference", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            int userId = Integer.parseInt(userIdField.getText());
+            String preferredCategory = preferredCategoryField.getText();
+            double preferredPrice = Double.parseDouble(preferredPriceField.getText());
+            double preferredRating = Double.parseDouble(preferredRatingField.getText());
+
+            UserPreference preference = new UserPreference(userId, preferredCategory, preferredPrice, preferredRating);
+            menuService.addUserPreference(preference);
+            JOptionPane.showMessageDialog(null, "User preference added successfully.");
+        }
     }
 
     private void recommendMenus() {
-        System.out.println("Enter user ID:");
-        int userId = scanner.nextInt();
-        scanner.nextLine();
+        String userIdString = JOptionPane.showInputDialog("Enter user ID:");
+        int userId = Integer.parseInt(userIdString);
 
         List<Menu> recommendedMenus = menuService.recommendMenus(userId);
+        StringBuilder message = new StringBuilder();
         for (Menu menu : recommendedMenus) {
-            System.out.println("ID: " + menu.getId());
-            System.out.println("Name: " + menu.getName());
-            System.out.println("Description: " + menu.getDescription());
-            System.out.println("Category: " + menu.getCategory());
-            System.out.println("Price: " + menu.getPrice());
-            System.out.println("Rating: " + menu.getRating());
-            System.out.println("------------");
+            message.append("ID: ").append(menu.getId())
+                    .append("\nName: ").append(menu.getName())
+                    .append("\nDescription: ").append(menu.getDescription())
+                    .append("\nCategory: ").append(menu.getCategory())
+                    .append("\nPrice: ").append(menu.getPrice())
+                    .append("\nRating: ").append(menu.getRating())
+                    .append("\n------------\n");
         }
+        JOptionPane.showMessageDialog(null, message.toString());
     }
 }
