@@ -9,6 +9,7 @@ public class MenuController {
 
     public void start() {
         JFrame frame = new JFrame("Food Menu Recommendation");
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
 
@@ -16,7 +17,6 @@ public class MenuController {
         panel.setLayout(new GridLayout(0, 1));
 
         JButton addMenuButton = new JButton("Add Menu");
-        JButton viewMenuButton = new JButton("View Menu");
         JButton viewAllMenusButton = new JButton("View All Menus");
         JButton updateMenuButton = new JButton("Update Menu");
         JButton deleteMenuButton = new JButton("Delete Menu");
@@ -24,7 +24,6 @@ public class MenuController {
         JButton recommendMenusButton = new JButton("Recommend Menus");
 
         panel.add(addMenuButton);
-        panel.add(viewMenuButton);
         panel.add(viewAllMenusButton);
         panel.add(updateMenuButton);
         panel.add(deleteMenuButton);
@@ -37,13 +36,6 @@ public class MenuController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 addMenu();
-            }
-        });
-
-        viewMenuButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                viewMenu();
             }
         });
 
@@ -92,15 +84,20 @@ public class MenuController {
         JTextField priceField = new JTextField();
         JTextField ratingField = new JTextField();
 
-        Object[] message = {
-                "Name:", nameField,
-                "Description:", descriptionField,
-                "Category:", categoryField,
-                "Price:", priceField,
-                "Rating:", ratingField
-        };
+        JPanel panel = new JPanel(new GridLayout(0, 2));
+        panel.add(new JLabel("Name:"));
+        panel.add(nameField);
+        panel.add(new JLabel("Description:"));
+        panel.add(descriptionField);
+        panel.add(new JLabel("Category:"));
+        panel.add(categoryField);
+        panel.add(new JLabel("Price:"));
+        panel.add(priceField);
+        panel.add(new JLabel("Rating:"));
+        panel.add(ratingField);
 
-        int option = JOptionPane.showConfirmDialog(null, message, "Add Menu", JOptionPane.OK_CANCEL_OPTION);
+        int option = JOptionPane.showConfirmDialog(null, panel, "Add Menu", JOptionPane.OK_CANCEL_OPTION);
+
         if (option == JOptionPane.OK_OPTION) {
             String name = nameField.getText();
             String description = descriptionField.getText();
@@ -111,23 +108,6 @@ public class MenuController {
             Menu menu = new Menu(0, name, description, category, price, rating);
             menuService.addMenu(menu);
             JOptionPane.showMessageDialog(null, "Menu added successfully.");
-        }
-    }
-
-    private void viewMenu() {
-        String idString = JOptionPane.showInputDialog("Enter menu ID:");
-        int id = Integer.parseInt(idString);
-
-        Menu menu = menuService.getMenu(id);
-        if (menu != null) {
-            JOptionPane.showMessageDialog(null, "ID: " + menu.getId()
-                    + "\nName: " + menu.getName()
-                    + "\nDescription: " + menu.getDescription()
-                    + "\nCategory: " + menu.getCategory()
-                    + "\nPrice: " + menu.getPrice()
-                    + "\nRating: " + menu.getRating());
-        } else {
-            JOptionPane.showMessageDialog(null, "Menu not found.");
         }
     }
 
@@ -228,5 +208,10 @@ public class MenuController {
                     .append("\n------------\n");
         }
         JOptionPane.showMessageDialog(null, message.toString());
+    }
+
+    public static void main(String[] args) {
+        MenuController menuController = new MenuController();
+        menuController.start();
     }
 }
