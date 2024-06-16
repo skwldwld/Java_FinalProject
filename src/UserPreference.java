@@ -1,22 +1,22 @@
 public class UserPreference {
-    private int userId;
+    private String userName;
     private String preferredCategory;
-    private double preferredPrice;
+    private int preferredPrice;
     private double preferredRating;
 
-    public UserPreference(int userId, String preferredCategory, double preferredPrice, double preferredRating) {
-        this.userId = userId;
+    public UserPreference(String userName, String preferredCategory, int preferredPrice, double preferredRating) {
+        this.userName = userName;
         this.preferredCategory = preferredCategory;
         this.preferredPrice = preferredPrice;
         this.preferredRating = preferredRating;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPreferredCategory() {
@@ -27,11 +27,11 @@ public class UserPreference {
         this.preferredCategory = preferredCategory;
     }
 
-    public double getPreferredPrice() {
+    public int getPreferredPrice() {
         return preferredPrice;
     }
 
-    public void setPreferredPrice(double preferredPrice) {
+    public void setPreferredPrice(int preferredPrice) {
         this.preferredPrice = preferredPrice;
     }
 
