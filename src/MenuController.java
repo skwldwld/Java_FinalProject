@@ -70,7 +70,7 @@ public class MenuController {
         recommendMenusButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                recommendMenus();
+                recommendMenu();
             }
         });
 
@@ -192,11 +192,11 @@ public class MenuController {
         }
     }
 
-    private void recommendMenus() {
+    private void recommendMenu() {
         String userNameString = JOptionPane.showInputDialog("Enter user Name:");
         String userName = userNameString;
 
-        Menu recommendedMenu = menuService.recommendMenus(userName);
+        Menu recommendedMenu = menuService.recommendMenu(userName);
         if (recommendedMenu != null) {
             String message = "ID: " + recommendedMenu.getId() +
                     "\nName: " + recommendedMenu.getName() +

@@ -35,7 +35,7 @@ public class MenuService {
         return userPreferenceRepository.getUserPreference(userName);
     }
 
-    public Menu recommendMenus(String userName) {
+    public Menu recommendMenu(String userName) {
         UserPreference preference = userPreferenceRepository.getUserPreference(userName);
         List<Menu> filteredMenus;
 
